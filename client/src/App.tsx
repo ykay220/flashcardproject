@@ -4,7 +4,7 @@ import "./App.css";
 import axios from "axios";
 
 interface Deck {
-  id: number;
+  _id: string;
   title: string;
 }
 
@@ -29,13 +29,24 @@ function App() {
 
   const handleCreateDeck = (e: React.FormEvent) => {
     e.preventDefault();
-    axios.post(
-      "http://localhost:5000/decks",
-      { title },
-      { headers: { "Content-Type": "application/json" } }
-    );
+
+    axios
+      .post(
+        "http://localhost:5000/decks",
+        { title },
+        { headers: { "Content-Type": "application/json" } }
+      )
+      .then(({ data: newdeck }) => {
+        setDecks([...decks, newdeck]);
+      });
 
     setTitle("");
+  };
+
+  const handleDeleteDeck = (deckId: string) => {
+    console.log(deckId);
+    axios.delete(`http://localhost:5000/decks/${deckId}`);
+    setDecks(decks.filter((deck) => deck._id !== deckId));
   };
 
   useEffect(() => {
@@ -47,8 +58,11 @@ function App() {
   return (
     <div className="mainWrap">
       <ul className="decks">
-        {decks.map((deck) => (
-          <li key={deck.id}>{deck.title}</li>
+        {decks.map((deck, index) => (
+          <li key={index}>
+            <button onClick={() => handleDeleteDeck(deck._id)}>x</button>
+            {deck.title}
+          </li>
         ))}
       </ul>
       <form onSubmit={handleCreateDeck}>

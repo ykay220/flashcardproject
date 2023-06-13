@@ -1,4 +1,5 @@
 import { config } from "dotenv";
+import deckController from "./controllers/DeckController";
 config();
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
@@ -12,24 +13,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/decks", async (req: Request, res: Response) => {
-  const decks = await Deck.find();
-  res.json(decks);
-});
+app.get("/decks", deckController.getDecksController);
 
-app.post("/decks", async (req: Request, res: Response) => {
-  const newDeck = new Deck({
-    title: req.body.title,
-  });
-  const createdDeck = await newDeck.save();
-  res.json(createdDeck);
-});
+app.post("/decks", deckController.createDecksController);
 
-app.delete("/decks/:deckId", async (req: Request, res: Response) => {
-  const deckId = req.params.deckId;
-  const deck = await Deck.findByIdAndDelete(deckId);
-  res.json(deck);
-});
+app.delete("/decks/:deckId", deckController.deletDecksController);
 
 mongoose.connect(process.env.MONGO_URL!).then(() => {
   console.log(`listening on port ${PORT}`);

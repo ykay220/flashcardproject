@@ -39,7 +39,7 @@
   border: 1px solid black;
 }
 
-.decks li button {
+.decks li .btn {
   position: absolute;
 
   font-size: 10px;

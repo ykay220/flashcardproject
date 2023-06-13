@@ -1,67 +1,43 @@
 import { useEffect, useState } from "react";
-
+import { Link } from "react-router-dom";
 import "./App.css";
-import axios from "axios";
-
-interface Deck {
-  _id: string;
-  title: string;
-}
+import deckService, { Deck } from "./services/deckService";
 
 function App() {
   const [title, setTitle] = useState("");
   const [decks, setDecks] = useState<Deck[]>([]);
 
-  // const handleCreateDeck = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   await fetch("http://localhost:5000/decks", {
-  //     method: "POST",
-  //     body: JSON.stringify({
-  //       title,
-  //     }),
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   });
-
-  //   setTitle("");
-  // };
+  useEffect(() => {
+    deckService.getAllDecks().then((res) => {
+      setDecks(res.data);
+    });
+  }, []);
 
   const handleCreateDeck = (e: React.FormEvent) => {
     e.preventDefault();
 
-    axios
-      .post(
-        "http://localhost:5000/decks",
-        { title },
-        { headers: { "Content-Type": "application/json" } }
-      )
-      .then(({ data: newdeck }) => {
-        setDecks([...decks, newdeck]);
-      });
+    deckService.createDeck(title).then(({ data: newdeck }) => {
+      setDecks([...decks, newdeck]);
+    });
 
     setTitle("");
   };
 
   const handleDeleteDeck = (deckId: string) => {
-    console.log(deckId);
-    axios.delete(`http://localhost:5000/decks/${deckId}`);
+    deckService.deleteDeck(deckId);
     setDecks(decks.filter((deck) => deck._id !== deckId));
   };
-
-  useEffect(() => {
-    axios.get<Deck[]>("http://localhost:5000/decks").then((res) => {
-      setDecks(res.data);
-    });
-  }, []);
 
   return (
     <div className="mainWrap">
       <ul className="decks">
         {decks.map((deck, index) => (
           <li key={index}>
-            <button onClick={() => handleDeleteDeck(deck._id)}>x</button>
-            {deck.title}
+            <button className="btn" onClick={() => handleDeleteDeck(deck._id)}>
+              x
+            </button>
+
+            <Link to={`decks/${deck._id}`}> {deck.title}</Link>
           </li>
         ))}
       </ul>

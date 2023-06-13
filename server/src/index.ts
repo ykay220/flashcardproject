@@ -1,10 +1,10 @@
 import { config } from "dotenv";
 import deckController from "./controllers/DeckController";
+import cardController from "./controllers/cardController";
 config();
-import express, { Request, Response } from "express";
+import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import Deck from "./models/Deck";
 
 const PORT = 5000;
 
@@ -18,6 +18,15 @@ app.get("/decks", deckController.getDecksController);
 app.post("/decks", deckController.createDecksController);
 
 app.delete("/decks/:deckId", deckController.deletDecksController);
+
+app.post("/decks/:deckId/cards", cardController.createCardForDeckController);
+
+app.delete(
+  "/decks/:deckId/cards/:index",
+  cardController.deletCardForDeckController
+);
+
+app.get("/decks/:deckId", cardController.getDeckController);
 
 mongoose.connect(process.env.MONGO_URL!).then(() => {
   console.log(`listening on port ${PORT}`);

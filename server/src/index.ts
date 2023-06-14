@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-import deckController from "./controllers/DeckController";
+import deckController from "./controllers/deckController";
 import cardController from "./controllers/cardController";
 config();
 import express from "express";

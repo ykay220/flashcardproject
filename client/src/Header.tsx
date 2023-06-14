@@ -5,7 +5,7 @@ const Header = () => {
   return (
     <div className="headerWrap">
       <div>
-        <Link to={"/"}>FlashCards</Link>
+        <Link to={"/"}>Flash Cards</Link>
       </div>
       <div>
         <a href="/">Decks</a>

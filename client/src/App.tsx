@@ -42,7 +42,7 @@ function App() {
   return (
     <>
       <Header />
-      <div className="mainWrap">
+      <div className="mainWrap extra">
         <h1>Your Decks</h1>
         <ul className="decks">
           {decks.map((deck, index) => (
